@@ -247,9 +247,6 @@ func NewClient(app App, shopName, token string, opts ...Option) *Client {
 	}
 
 	c := &Client{
-		Client: &http.Client{
-			Timeout: time.Second * defaultHttpTimeout,
-		},
 		log:        &LeveledLogger{},
 		app:        app,
 		baseURL:    baseURL,
@@ -295,6 +292,12 @@ func NewClient(app App, shopName, token string, opts ...Option) *Client {
 	// apply any options
 	for _, opt := range opts {
 		opt(c)
+	}
+
+	if c.Client == nil {
+		c.Client = &http.Client{
+			Timeout: time.Second * defaultHttpTimeout,
+		}
 	}
 
 	return c
